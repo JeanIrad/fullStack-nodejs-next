@@ -1,0 +1,56 @@
+
+ Now, we will create a  Dockerfile  to build the image for the backend service. 
+ // Path: backend/Dockerfile
+FROM node:14
+WORKDIR /app
+COPY package.json .
+RUN npm install
+COPY . .
+EXPOSE 3000
+CMD ["node", "index.js"]
+ 
+ Now, we will create a  docker-compose.yml  file to define the services. 
+ // Path: docker-compose.yml
+version: "3.8"
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+  db:
+    image: prisma/prisma:latest
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: prisma
+      POSTGRES_PASSWORD: prisma
+      POSTGRES_DB: prisma
+    volumes:
+      - prisma:/var/lib/postgresql/data
+    networks:
+      - prisma
+volumes:
+  prisma:
+networks:
+  prisma:
+ 
+ Now, we will build the services using the  docker-compose  command. 
+ docker-compose up --build
+ 
+ The above command will build the services and start the containers. 
+ Now, we can test the API using the following endpoints. 
+ GET /test
+GET /users
+GET /users/:id
+POST /users
+PUT /users/:id
+DELETE /users/:id
+ 
+ Conclusion 
+ In this article, we have learned how to create a REST API using Node.js, Express, and Prisma. We have also learned how to containerize the application using Docker and run the services using Docker Compose. 
+ I hope you enjoyed this article. Please feel free to ask any questions in the comments section. 
+ Happy Coding! 
+ Peer Review Contributions by:  Lalithnarayan C
+ thanks for the article. I have a question. I have a prisma schema with a relation between two tables. How can I get the data from both tables in a single query?
